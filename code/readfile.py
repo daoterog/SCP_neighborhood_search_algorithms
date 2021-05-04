@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 def readcost(n,lines):
     costs = []
@@ -43,10 +44,10 @@ def completetable(df, lines):
 
     return (df, lines, l, c)
 
-def readfile(name):
+def readfile(path):
 
     # Read file lines
-    file1 = open(name + '.txt','r')
+    file1 = open(path, 'r')
     lines = file1.readlines()
 
     # Extract dimensions
