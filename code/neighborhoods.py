@@ -114,8 +114,9 @@ def FIfirst_neighborhood(df, costs, subsets):
     # First Neighborhood
     while anterior > nueva:
         anterior = calculatecosts(subsets, costs)
-        print(subsets)
-        print('Anterior: ' + str(anterior))
+
+        # print(subsets)
+        # print('Anterior: ' + str(anterior))
 
         # Copy df and costs to perform operations
         df_c1 = df.copy()
@@ -162,7 +163,7 @@ def FIfirst_neighborhood(df, costs, subsets):
             replacement_subsets = find_lower_cost_subsets(df_c1, costs_c1, max_cost)
 
             if replacement_subsets:
-                print('FUNCIONA')
+                # print('FUNCIONA')
 
                 subsets_option = cutted_subsets + replacement_subsets
                 evaluate = calculatecosts(subsets_option, costs)
@@ -170,19 +171,19 @@ def FIfirst_neighborhood(df, costs, subsets):
                 if evaluate < anterior:
                     nueva = evaluate
                     subsets = subsets_option
-                    print('Nueva: ' + str(nueva))
+
+                    # print('Nueva: ' + str(nueva))
                 else:
                     break
 
-            else:
-                print('HPTA')
         else:
-            print('VACIO')
+            # print('VACIO')
 
             # Update subset list
             subsets = cutted_subsets
             nueva = calculatecosts(subsets, costs)
-            print('Nueva: ' + str(nueva))
+
+            # print('Nueva: ' + str(nueva))
 
     return subsets
 
@@ -192,8 +193,9 @@ def FIsecond_neighborhood(df, costs, n, subsets):
 
     while anterior > nueva:
         anterior = calculatecosts(subsets, costs)
-        print(subsets)
-        print('Anterior: ' + str(anterior))
+
+        # print(subsets)
+        # print('Anterior: ' + str(anterior))
 
         # Copy df and costs to perform operations
         df_c2 = df.copy()
@@ -225,7 +227,7 @@ def FIsecond_neighborhood(df, costs, n, subsets):
             replacement_subsets = find_lower_cost_subsets(df_c2, costs_c2, subsets_cost)
 
             if replacement_subsets:
-                print('FUNCIONA')
+                # print('FUNCIONA')
 
                 subsets_option = cutted_subsets + replacement_subsets
                 evaluate = calculatecosts(subsets_option, costs)
@@ -233,15 +235,13 @@ def FIsecond_neighborhood(df, costs, n, subsets):
                 if evaluate < anterior:
                     nueva = evaluate
                     subsets = subsets_option
-                    print('Nueva: ' + str(nueva))
+
+                    # print('Nueva: ' + str(nueva))
                 else:
                     break
 
-            else:
-                print('HPTA')
-
         else:
-            print('VACIO')
+            # print('VACIO')
 
             # Update subset list
             subsets = cutted_subsets
@@ -256,8 +256,9 @@ def BIfirst_neighborhood(df, costs, n1, subsets):
     # First Neighborhood
     while anterior > nueva:
         anterior = calculatecosts(subsets, costs)
-        print(subsets)
-        print('Anterior: ' + str(anterior))
+
+        # print(subsets)
+        # print('Anterior: ' + str(anterior))
 
         # Copy df and costs to perform operations
         df_c1 = df.copy()
@@ -301,7 +302,7 @@ def BIfirst_neighborhood(df, costs, n1, subsets):
             if not df_c2.empty:
                 replacement_subsets = find_lower_cost_subsets(df_c2, costs_c2, cost)
                 if replacement_subsets:
-                    print('FUNCIONA')
+                    # print('FUNCIONA')
 
                     # Calculate subset option and store it
                     subsets_option = cutted_subsets + replacement_subsets
@@ -309,10 +310,9 @@ def BIfirst_neighborhood(df, costs, n1, subsets):
 
                     zs.append(nueva_option)
                     subset_options.append(subsets_option)
-                else:
-                    print('HPTA')
+
             else:
-                print('VACIO')
+                # print('VACIO')
 
                 # Calculate subset option and store it
                 subsets_option = cutted_subsets
@@ -331,7 +331,8 @@ def BIfirst_neighborhood(df, costs, n1, subsets):
         if min_zs < anterior:
             subsets = subset_options[rand_min]
             nueva = min_zs
-            print('Nueva: ' + str(nueva))
+
+            # print('Nueva: ' + str(nueva))
         else:
             break
 
@@ -343,8 +344,9 @@ def BIsecond_neighborhood(df, costs, n, alpha, subsets):
 
     while anterior > nueva:
         anterior = calculatecosts(subsets, costs)
-        print(subsets)
-        print('Anterior: ' + str(anterior))
+
+        # print(subsets)
+        # print('Anterior: ' + str(anterior))
 
         # Copy df and costs to perform operations
         df_c2 = df.copy()
@@ -390,7 +392,7 @@ def BIsecond_neighborhood(df, costs, n, alpha, subsets):
                 replacement_subsets = find_lower_cost_subsets(df_c3, costs_c3, subsets_cost)
 
                 if replacement_subsets:
-                    print('FUNCIONA')
+                    # print('FUNCIONA')
 
                     # Calculate subset option and store it
                     subsets_option = cutted_subsets + replacement_subsets
@@ -399,11 +401,8 @@ def BIsecond_neighborhood(df, costs, n, alpha, subsets):
                     zs.append(nueva_option)
                     subset_options.append(subsets_option)
 
-                else:
-                    print('HPTA')
-
             else:
-                print('VACIO')
+                # print('VACIO')
                 
                 # Calculate subset option and store it
                 subsets_option = cutted_subsets
@@ -422,7 +421,8 @@ def BIsecond_neighborhood(df, costs, n, alpha, subsets):
         if min_zs < anterior:
             subsets = subset_options[rand_min]
             nueva = min_zs
-            print('Nueva: ' + str(nueva))
+
+            # print('Nueva: ' + str(nueva))
         else:
             break
 
