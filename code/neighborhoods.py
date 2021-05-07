@@ -482,3 +482,48 @@ def LS_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha):
         print("New Solution: %s" % new)
     
     return subsets
+
+def aux_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha, nsol):
+
+    """
+    Helper function that is incharged of running the next iteration over the neighborhood
+    nsol times. Due to the fact that randomness is involved in each way of generating new solutions
+    this action is necessary.
+
+    Args:
+        df: Dataframe that specifies which subset cover which elements 
+        costs: costs of choosing each subset
+        subsests: chosen subsets
+        neigh: number that indicates which neighborhood to head
+        n: n condition for second neighborhood
+        n1: n condition for third neighborhood
+        n2: n condition for fourth neighborhood
+        alpha: percentage of the top half subsets that will be considered.
+        nsol: number of times that it will run
+
+    Output:
+        subsets: newly chosen subsets
+    """
+
+    # To store results
+    zs = []
+    subset_options = []
+
+    for i in range(nsol):
+
+        # Find solution that belongs to the j neighborhood
+        new_subsets = find_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha)
+        new_cost = calculatecosts(new_subsets, costs)
+
+        zs.append(new_cost)
+        subset_options.append(new_subsets)
+
+    # Datatype conversions in order to make operations easier
+    zs = pd.Series(zs)
+    min_zs = zs.min()
+    mins = zs[zs == min_zs]
+    rand_min = mins.sample(1).index[0]
+
+    subsets = subset_options[rand_min]
+
+    return subsets

@@ -1,56 +1,11 @@
 import pandas as pd
 import numpy as np
+import time
 
-from neighborhoods import solution_generator, find_neighborhoods, LS_neighborhoods
+from neighborhoods import solution_generator, aux_neighborhoods, LS_neighborhoods
 from auxiliaries import calculatecosts
 
-
-def aux_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha, nsol):
-
-    """
-    Helper function that is incharged of running the next iteration over the neighborhood
-    nsol times. Due to the fact that randomness is involved in each way of generating new solutions
-    this action is necessary.
-
-    Args:
-        df: Dataframe that specifies which subset cover which elements 
-        costs: costs of choosing each subset
-        subsests: chosen subsets
-        neigh: number that indicates which neighborhood to head
-        n: n condition for second neighborhood
-        n1: n condition for third neighborhood
-        n2: n condition for fourth neighborhood
-        alpha: percentage of the top half subsets that will be considered.
-        nsol: number of times that it will run
-
-    Output:
-        subsets: newly chosen subsets
-    """
-
-    # To store results
-    zs = []
-    subset_options = []
-
-    for i in range(nsol):
-
-        # Find solution that belongs to the j neighborhood
-        new_subsets = find_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha)
-        new_cost = calculatecosts(new_subsets, costs)
-
-        zs.append(new_cost)
-        subset_options.append(new_subsets)
-
-    # Datatype conversions in order to make operations easier
-    zs = pd.Series(zs)
-    min_zs = zs.min()
-    mins = zs[zs == min_zs]
-    rand_min = mins.sample(1).index[0]
-
-    subsets = subset_options[rand_min]
-
-    return subsets
-
-def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 30):
+def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
 
     """
     VND algorithm.
@@ -107,7 +62,7 @@ def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 30):
     return cost_before, subsets_before
 
 
-def VNS(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 30):
+def VNS(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
 
     """
     VNS algorithm.
@@ -182,7 +137,7 @@ def VNS(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 30):
 
     return cost_before, subsets_before
 
-def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 30):
+def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 20):
 
     """
     Simulated Anealing algorithm.
@@ -203,6 +158,9 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
         cost: cost function
     """
 
+    # Start time
+    start_time = time.perf_counter()
+
     # Generate First Solution and calculate cost
     initial_subsets = solution_generator(df, costs)
     initial_cost = calculatecosts(initial_subsets, costs)
@@ -215,6 +173,8 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
     # Aux
     cost_before = initial_cost
     subsets_before = initial_subsets
+    best_cost = 300000000000
+    best_subsets = []
 
     # Start Loop
     while T > Tf:
@@ -239,11 +199,20 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
                 cost_before = new_cost
                 subsets_before = new_subsets
                 print('NEW IMPROVEMENT')
+
+                # Store best results
+                if best_cost > cost_before:
+                    best_cost = cost_before
+                    best_subsets = subsets_before
+
+                # Time counter
+                time_now = time.perf_counter() - start_time
+                if time_now > 300:
+                    print('BREAK')
+                    break
             
             else:
                 rand = np.random.uniform(0,1)
-                print(rand)
-                print(np.exp(-d/T))
 
                 if rand < np.exp(-d/T):
 
@@ -251,14 +220,20 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
                     cost_before = new_cost
                     subsets_before = new_subsets
                     print('SET BACK')
+
+                    # Time counter
+                    time_now = time.perf_counter() - start_time
+                    if time_now > 300:
+                        print('BREAK')
+                        break
         
         T = r*T
 
-    print('Final Solution: %s' % cost_before)
+    print('Final Solution: %s' % best_cost)
 
-    return cost_before, subsets_before
+    return best_cost, best_subsets
 
-def LS(df, costs, neigh, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 30):
+def LS(df, costs, neigh, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
 
     """
     Initialize nsol local search and chooses the one with the best results.
