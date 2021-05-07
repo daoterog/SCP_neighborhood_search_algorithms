@@ -4,9 +4,15 @@ import time
 import os
 
 from readfile import readfile
-from algorithms import VND, VNS, SA, LS
+from algorithms import VND, SA, LS
 
 from auxiliaries import lowerbound, data
+
+"""
+This file run the selected algorithms over every dataset and compiles the results
+into multiple csv files. In order to run correctly the program the user must be 
+working inside the /code directory, otherwise, the program won't run. s
+"""
 
 # File to read
 root = os.path.join(os.getcwd(), 'datasets')
@@ -102,7 +108,7 @@ dat = [files, nelements, nsubsets, lbound, vnd_scores, vnd_rel, vnd_times, sa_sc
 results = pd.DataFrame(data = np.transpose(dat), columns = columns)
 results = results.append(last, ignore_index = True)
 
-# To excel
+# To csv
 df_vnd.to_csv('SCP_DanielOtero_VND.csv', header = False, index = False)
 df_sa.to_csv('SCP_DanielOtero_SA.csv', header = False, index = False)
 df_ls.to_csv('SCP_DanielOtero_LS.csv', header = False, index = False)

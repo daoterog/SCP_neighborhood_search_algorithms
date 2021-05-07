@@ -175,6 +175,7 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
     subsets_before = initial_subsets
     best_cost = 300000000000
     best_subsets = []
+    done = False
 
     # Start Loop
     while T > Tf:
@@ -209,6 +210,7 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
                 time_now = time.perf_counter() - start_time
                 if time_now > 300:
                     print('BREAK')
+                    done = True
                     break
             
             else:
@@ -225,9 +227,12 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
                     time_now = time.perf_counter() - start_time
                     if time_now > 300:
                         print('BREAK')
+                        done = True
                         break
         
         T = r*T
+        if done: 
+            break 
 
     print('Final Solution: %s' % best_cost)
 

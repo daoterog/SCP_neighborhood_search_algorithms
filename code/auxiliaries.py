@@ -3,16 +3,44 @@ import numpy as np
 
 def lowerbound(df, costs):
 
-    maxelements = df.sum().max()
-    minsubsets = np.ceil(df.shape[0]/maxelements)
+    """
+    Calculate lower bound for the problem. Calculate the minimum cost of coverage 
+    for every element and sum it.
 
-    mincost = costs.min()
+    Args:
+        df: Dataframe that specifies which subset cover which elements 
+        costs: Series costs of choosing each subset
 
-    lb = mincost*minsubsets
+    Output:
+        lb: lower bound
+    """
+    lb = 0
+    nelements = df.sum()
 
-    return lb
+    for i in range(df.shape[0]):
+        elem_i = df.loc[i,:]
+        subsets = elem_i[elem_i == 1].index
+        subsets_cost = costs[subsets]
+        subsest_nelem = nelements[subsets]
+        ratio = subsets_cost/subsest_nelem
+        min_ratio = ratio.min()
+        lb += min_ratio
+
+    return np.ceil(lb)
 
 def calculatecosts(subsets, costs):
+
+    """
+    Calculate solution cost function.
+
+    Args:
+        subsets: chosen subsets
+        costs: subsets cost
+
+    Output:
+        z: cost
+    """
+
     z = 0
 
     for subset in subsets:

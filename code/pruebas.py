@@ -4,6 +4,7 @@ import os
 
 from readfile import readfile
 from algorithms import VND, VNS, SA, LS
+from auxiliaries import lowerbound
 
 root = os.path.join(os.getcwd(), 'datasets')
 
