@@ -26,7 +26,7 @@ def lowerbound(df, costs):
         min_ratio = ratio.min()
         lb += min_ratio
 
-    return np.ceil(lb)
+    return int(np.ceil(lb))
 
 def calculatecosts(subsets, costs):
 

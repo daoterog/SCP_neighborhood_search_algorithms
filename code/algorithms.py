@@ -5,7 +5,7 @@ import time
 from neighborhoods import solution_generator, aux_neighborhoods, LS_neighborhoods
 from auxiliaries import calculatecosts
 
-def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
+def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 20):
 
     """
     VND algorithm.
@@ -24,6 +24,9 @@ def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
         subsets: newly chosen subsets
         cost: cost function
     """
+
+    # Start time
+    start_time = time.perf_counter()
 
     # Generate First Solution and calculate cost
     initial_subsets = solution_generator(df, costs)
@@ -57,12 +60,19 @@ def VND(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
         else:
             neigh += 1
 
+        # Time counter
+        time_now = time.perf_counter() - start_time
+        if time_now > 300:
+            print('BREAK')
+            done = True
+            break
+
     print('Final Solution: %s' % cost_before)
     
     return cost_before, subsets_before
 
 
-def VNS(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
+def VNS(df, costs, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 20):
 
     """
     VNS algorithm.
@@ -238,7 +248,7 @@ def SA(df, costs, T0, Tf, L, r, neigh = 3, n = 2, n1 = 10, n2 = 10, alpha = 0.3,
 
     return best_cost, best_subsets
 
-def LS(df, costs, neigh, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
+def LS(df, costs, neigh, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 20):
 
     """
     Initialize nsol local search and chooses the one with the best results.
@@ -256,6 +266,9 @@ def LS(df, costs, neigh, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
     Output:
         subsets: newly chosen subsets
     """
+
+    # Start time
+    start_time = time.perf_counter()
 
     # Generate First Solution and calculate cost
     initial_subsets = solution_generator(df, costs)
@@ -276,6 +289,15 @@ def LS(df, costs, neigh, n = 2, n1 = 10, n2 = 10, alpha = 0.3, nsol = 25):
 
         zs.append(cost_option)
         subset_options.append(subsets_option)
+
+        # Time counter
+        time_now = time.perf_counter() - start_time
+        if time_now > 300:
+            print('BREAK')
+            done = True
+            break
+
+
     
     # Select minimum, if multiple, pick randomly
     zs = pd.Series(zs)

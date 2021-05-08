@@ -505,6 +505,9 @@ def aux_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha, nsol):
         subsets: newly chosen subsets
     """
 
+    # Start time
+    start_time = time.perf_counter()
+
     # To store results
     zs = []
     subset_options = []
@@ -517,6 +520,13 @@ def aux_neighborhoods(df, costs, subsets, neigh, n, n1, n2, alpha, nsol):
 
         zs.append(new_cost)
         subset_options.append(new_subsets)
+
+        # Time counter
+        time_now = time.perf_counter() - start_time
+        if time_now > 30:
+            print('BREAK')
+            done = True
+            break
 
     # Datatype conversions in order to make operations easier
     zs = pd.Series(zs)
